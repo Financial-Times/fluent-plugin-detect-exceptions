@@ -1,6 +1,9 @@
 = Exception detector plugin for {fluentd}[http://github.com/fluent/fluentd]
 
-fluent-plugin-detect-exceptions is an
+This project is a fork of {fluend-pluging-detect-exceptions}[https://github.com/Financial-Times/fluent-plugin-detect-exceptions]. 
+It has been adapted to also detect FT membership specific multiline exception logs. 
+
+fluent-plugin-detect-memb-exceptions is an
 {output plugin for fluentd}[http://docs.fluentd.org/articles/output-plugin-overview]
 which scans a log stream text messages or JSON records for multi-line exception
 stack traces: If a consecutive sequence of log messages forms an exception stack
@@ -22,21 +25,13 @@ cases where the content of log records that belong to a single exception stack
 are so similar (e.g. because they contain the timestamp of the log entry) that
 this loss of information is irrelevant.
 
-This is NOT an official Google product.
-
-{<img src="https://badge.fury.io/rb/fluent-plugin-detect-exceptions.svg" alt="Gem Version" />}[http://badge.fury.io/rb/fluent-plugin-detect-exceptions]
-{<img src="https://secure.travis-ci.org/GoogleCloudPlatform/fluent-plugin-detect-exceptions.png" alt="Build Status" />}[https://travis-ci.org/GoogleCloudPlatform/fluent-plugin-detect-exceptions]
-
 == Installation
 
 This gem is hosted at
-{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-detect-exceptions]
+{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-detect-memb-exceptions]
 and can be installed using:
 
-    $ gem install fluent-plugin-detect-exceptions
-
-Installing {google-fluentd}[https://cloud.google.com/logging/docs/agent/]
-will also install and configure the gem.
+    $ gem install fluent-plugin-detect-memb-exceptions
 
 == Configuration
 
@@ -103,8 +98,3 @@ Example configuration:
       languages java, python
       multiline_flush_interval 0.1
     </match>
-
-== Copyright
-
-Copyright:: Copyright 2016 Google Inc. All rights reserved.
-License::   Apache License, Version 2.0

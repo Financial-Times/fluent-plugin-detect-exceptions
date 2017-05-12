@@ -50,12 +50,32 @@ module Fluent
     end
 
     JAVA_RULES = [
-      rule(:start_state,
-           /(?:Exception|Error|Throwable|V8 errors stack trace)[:\r\n]/,
-           :java),
+      rule(:start_state, /(?:Exception|Error|Throwable|V8 errors stack trace)[:\r\n]/, :java),
+      rule(:start_state, /(?:ERROR|WARN)(\s+\[)/, :java_stack_begin),
+      rule(:java_stack_begin, /(?:Exception|Error|Throwable|V8 errors stack trace)[:\r\n]/, :java),
       rule(:java, /^[\t ]+(?:eval )?at /, :java),
+      rule(:java, /^(?:eval )?! at/, :java),
       rule(:java, /^[\t ]*(?:Caused by|Suppressed):/, :java),
-      rule(:java, /^[\t ]*... \d+\ more/, :java)
+      rule(:java, /^[\t ]*... \d+\ (more|common frames omitted)/, :java)
+    ].freeze
+
+    KAFKA_RULES = [
+      rule(:start_state, /(?:ERROR|WARN)(\s+\[).*kafka/, :kafka_failure_info),
+      rule(:start_state, /^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z (?:ERROR|WARN)/, :kafka_failure_info),
+      rule(:kafka_failure_info, /NoKafkaConnectionError/, :kafka_failure_info),
+      rule(:kafka_failure_info, /^(\s)*server: 'kafka/, :kafka_failure_info),
+      rule(:kafka_failure_info, /^(\s)*message:/, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Message-Timestamp: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Message-Type: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Origin-System-Id: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Origin-Host-Location: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Content-Type: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Origin-Host: /, :kafka_failure_info),
+      rule(:kafka_failure_info, /^{*.+}+*.partitionKey*.+topic/, :kafka_failure_info),
+      rule(:kafka_failure_info, /^Message-Id: [a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/, :java),
+      rule(:kafka_failure_info, /^\[at /, :java),
+      rule(:kafka_failure_info, /(?:Exception|Error|Throwable|V8 errors stack trace)[:\r\n]/, :java),
+      rule(:java, /^(?:eval )?! at/, :java)      
     ].freeze
 
     PYTHON_RULES = [
@@ -89,12 +109,12 @@ module Fluent
     ].freeze
 
     ALL_RULES = (
-      JAVA_RULES + PYTHON_RULES + PHP_RULES + GO_RULES + RUBY_RULES).freeze
+      KAFKA_RULES + JAVA_RULES + PYTHON_RULES + PHP_RULES + GO_RULES + RUBY_RULES).freeze
 
     RULES_BY_LANG = {
-      java: JAVA_RULES,
-      javascript: JAVA_RULES,
-      js: JAVA_RULES,
+      java: JAVA_RULES + KAFKA_RULES,
+      javascript: JAVA_RULES + KAFKA_RULES,
+      js: JAVA_RULES + KAFKA_RULES,
       csharp: JAVA_RULES,
       py: PYTHON_RULES,
       python: PYTHON_RULES,
@@ -217,7 +237,6 @@ module Fluent
                        @buffer_size + message.length > @max_bytes
         detection_status = @exception_detector.update(message)
       end
-
       update_buffer(detection_status, time_sec, record, message)
 
       force_flush if @max_lines > 0 && @messages.length == @max_lines

@@ -41,7 +41,6 @@ module Fluent
 
     def configure(conf)
       super
-
       if multiline_flush_interval
         @check_flush_interval = [multiline_flush_interval * 0.1, 1].max
       end
@@ -54,7 +53,6 @@ module Fluent
 
     def start
       super
-
       if multiline_flush_interval
         @flush_buffer_mutex = Mutex.new
         @stop_check = false
@@ -115,6 +113,7 @@ module Fluent
           @flush_buffer_mutex.sleep(@check_flush_interval)
           now = Time.now
           break if @stop_check
+          log.debug 'Reached flush loop so stopping'
           @accumulators.each_value do |acc|
             acc.force_flush if now - acc.buffer_start_time >
                                @multiline_flush_interval

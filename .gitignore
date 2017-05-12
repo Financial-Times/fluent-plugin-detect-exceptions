@@ -1,2 +1,6 @@
 Gemfile.lock
 *~
+vendor/
+.bundle/
+.idea/
+fluent-plugin-detect-memb-exceptions-*.gem
