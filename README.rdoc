@@ -98,3 +98,14 @@ Example configuration:
       languages java, python
       multiline_flush_interval 0.1
     </match>
+
+== Making changed
+
+If you make any changes to this gem, you will need to push your changes to rubygems.org.
+
+
+$ gem build fluent-plugin-detect-exceptions.gemspec
+$ gem push fluent-plugin-detect-exceptions-0.0.<your-version>.gem
+
+
+
