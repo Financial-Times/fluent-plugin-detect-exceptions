@@ -11,7 +11,7 @@ eos
   gem.homepage      = \
     'https://github.com/Financial-Times/fluent-plugin-detect-exceptions'
   gem.license       = 'Apache-2.0'
-  gem.version       = '0.0.1'
+  gem.version       = '0.0.3'
   gem.authors       = ['Naomi stern']
   gem.email         = ['naomi.stern@ft.com']
   gem.required_ruby_version = Gem::Requirement.new('>= 2.0')

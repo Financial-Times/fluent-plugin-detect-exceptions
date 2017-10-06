@@ -180,6 +180,20 @@ This arbitrary text.
 I am glad it contains no exception.
 END
 
+  ELIXIR_EXC = <<END.freeze
+12:08:17.930 [error] Ranch protocol #PID<0.28713.3> (:cowboy_protocol) of listener Graphql.Web.Endpoint.HTTP terminated
+** (exit) an exception was raised:
+    ** (FunctionClauseError) no function clause matching in Graphql.Schema.Charge.map_to_schema/1
+        (graphql) lib/graphql/schema/offer/offer.ex:159: Graphql.Schema.Charge.map_to_schema(%{"amount" => %{"currency" => "AUD", "nativeSymbol" => "$", "symbol" => "AU$", "value" => "1.00"}, "basis" => "ONE_TIME", "id" => "2c92a0fb4a38064c014a4e6d9a74281a", "name" => "P2-Monthly-Trial"})
+        (elixir) lib/enum.ex:1255: Enum."-map/2-lists^map/1-0-"/2
+        (graphql) lib/graphql/schema/offer/offer.ex:137: Graphql.Schema.Pricing.map_to_schema/1
+        (elixir) lib/enum.ex:1255: Enum."-map/2-lists^map/1-0-"/2
+        (graphql) lib/graphql/schema/offer/offer.ex:34: Graphql.Schema.Offer.map_to_schema/1
+        (graphql) lib/graphql/resolvers/offer_resolver.ex:29: Graphql.OfferResolver.map_result/1
+        (tapper_absinthe_plug) lib/helper.ex:38: Tapper.Absinthe.Helper.in_span/2
+        (elixir) lib/task/supervised.ex:85: Task.Supervised.do_apply/2
+END
+
   def check_multiline(detector, expected_first, expected_last, multiline)
     lines = multiline.lines
     lines.each_with_index do |line, index|
@@ -208,9 +222,9 @@ END
     detector = Fluent::ExceptionDetector.new
     after_exc = detects_end ? :end_trace : :inside_trace
     before_second_exc = detects_end ? :inside_trace : :start_trace
-    check_multiline(detector, :no_trace, :no_trace, 'This is not an exception.')
+    check_multiline(detector, :no_trace, :no_trace, '12:08:17.930 This is not an exception.')
     check_multiline(detector, :inside_trace, after_exc, exception)
-    check_multiline(detector, :no_trace, :no_trace, 'This is not an exception.')
+    check_multiline(detector, :no_trace, :no_trace, '12:08:17.930 This is not an exception.')
     check_multiline(detector, :inside_trace, after_exc, exception)
     check_multiline(detector, before_second_exc, after_exc, exception)
   end
@@ -218,6 +232,10 @@ END
   def test_java
     check_exception(JAVA_EXC, false)
     check_exception(COMPLEX_JAVA_EXC, false)
+  end
+
+  def test_elixir
+    check_exception(ELIXIR_EXC, false)
   end
 
   def test_js
@@ -259,6 +277,7 @@ END
     check_exception(CSHARP_EXC, false)
     check_exception(V8_JS_EXC, false)
     check_exception(RUBY_EXC, false)
+    check_exception(ELIXIR_EXC, false)
   end
 
   def test_reset

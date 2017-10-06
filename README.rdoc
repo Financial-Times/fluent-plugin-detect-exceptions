@@ -53,7 +53,7 @@ The plugin supports the following parameters:
 [languages]  A list of language for which exception stack traces shall be
              detected. The values in the list can be separated by commas or
              written as JSON list.
-             Supported values: java, js, csharp, python, go, ruby, php, all.
+             Supported values: java, js, csharp, python, go, ruby, php, elixir, all.
              Default: all.
 
 [multiline_flush_interval]  Interval in seconds after which a (possibly not
@@ -99,13 +99,14 @@ Example configuration:
       multiline_flush_interval 0.1
     </match>
 
-== Making changed
+== Making changes
 
 If you make any changes to this gem, you will need to push your changes to rubygems.org.
 
 
-$ gem build fluent-plugin-detect-exceptions.gemspec
-$ gem push fluent-plugin-detect-exceptions-0.0.<your-version>.gem
+$ gem build fluent-plugin-detect-memb-exceptions.gemspec
+
+$ gem push fluent-plugin-detect-memb-exceptions-0.0.<your-version>.gem
 
 
 

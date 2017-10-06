@@ -85,6 +85,11 @@ module Fluent
       rule(:python, /^(?:[^\s.():]+\.)*[^\s.():]+:/, :start_state)
     ].freeze
 
+    ELIXIR_RULES = [
+      rule(:start_state, /^\d{2}:\d{2}:\d{2}\.\d{3} \[error\] /, :elixir_failure_info),
+      rule(:elixir_failure_info, /^[^\d]/, :elixir_failure_info)
+    ].freeze
+
     PHP_RULES = [
       rule(:start_state, /
         (?:PHP\ (?:Notice|Parse\ error|Fatal\ error|Warning):)|
@@ -109,7 +114,7 @@ module Fluent
     ].freeze
 
     ALL_RULES = (
-      KAFKA_RULES + JAVA_RULES + PYTHON_RULES + PHP_RULES + GO_RULES + RUBY_RULES).freeze
+      KAFKA_RULES + JAVA_RULES + PYTHON_RULES + PHP_RULES + GO_RULES + RUBY_RULES + ELIXIR_RULES).freeze
 
     RULES_BY_LANG = {
       java: JAVA_RULES + KAFKA_RULES,
@@ -122,6 +127,7 @@ module Fluent
       go: GO_RULES,
       rb: RUBY_RULES,
       ruby: RUBY_RULES,
+      elixir: ELIXIR_RULES,
       all: ALL_RULES
     }.freeze
 
