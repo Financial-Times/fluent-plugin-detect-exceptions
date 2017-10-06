@@ -28,10 +28,10 @@ this loss of information is irrelevant.
 == Installation
 
 This gem is hosted at
-{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-detect-memb-exceptions]
+{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-detect-ft-memb-exceptions]
 and can be installed using:
 
-    $ gem install fluent-plugin-detect-memb-exceptions
+    $ gem install fluent-plugin-detect-ft-memb-exceptions
 
 == Configuration
 
@@ -104,9 +104,9 @@ Example configuration:
 If you make any changes to this gem, you will need to push your changes to rubygems.org.
 
 
-$ gem build fluent-plugin-detect-memb-exceptions.gemspec
+$ gem build fluent-plugin-detect-ft-memb-exceptions.gemspec
 
-$ gem push fluent-plugin-detect-memb-exceptions-0.0.<your-version>.gem
+$ gem push fluent-plugin-detect-ft-memb-exceptions-0.0.<your-version>.gem
 
 
 
